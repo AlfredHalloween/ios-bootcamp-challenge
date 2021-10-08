@@ -105,6 +105,15 @@ class ListViewController: UICollectionViewController {
     // MARK: - Navigation
 
     // TODO: Handle navigation to detail view controller
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == DetailViewController.segueIdentifier {
+            if let destinationVC = segue.destination as? DetailViewController {
+                if let cell = sender as? PokeCell {
+                    destinationVC.pokemon = cell.pokemon
+                }
+            }
+        }
+    }
 
     // MARK: - UI Hooks
 
