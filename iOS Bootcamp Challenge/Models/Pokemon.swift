@@ -61,12 +61,29 @@ struct Pokemon: Decodable, Equatable {
         let other = try sprites.nestedContainer(keyedBy: CodingKeys.self, forKey: .other)
         let officialArtWork = try other.nestedContainer(keyedBy: CodingKeys.self, forKey: .officialArtwork)
         self.image = try? officialArtWork.decode(String.self, forKey: .frontDefault)
-
-        // TODO: Decode list of types & abilities
-
-        self.types = []
-        self.abilities = []
-
+        
+        var temporalAbilities: [String] = []
+        var decoderAbilities = try container.nestedUnkeyedContainer(forKey: .abilities)
+        while !decoderAbilities.isAtEnd {
+            let decoderAbility = try decoderAbilities.nestedContainer(keyedBy: CodingKeys.self)
+            let decodeObject = try decoderAbility.nestedContainer(keyedBy: CodingKeys.self, forKey: .ability)
+            if let ability = try? decodeObject.decode(String.self, forKey: .name) {
+                temporalAbilities.append(ability)
+            }
+        }
+        self.abilities = temporalAbilities
+        
+        var temporalTypes: [String] = []
+        var decoderTypes = try container.nestedUnkeyedContainer(forKey: .types)
+        while !decoderTypes.isAtEnd {
+            let decoderType = try decoderTypes.nestedContainer(keyedBy: CodingKeys.self)
+            let decodeObject = try decoderType.nestedContainer(keyedBy: CodingKeys.self, forKey: .type)
+            if let type = try? decodeObject.decode(String.self, forKey: .name) {
+                temporalTypes.append(type)
+            }
+        }
+        self.types = temporalTypes
+        
         self.weight = try container.decode(Float.self, forKey: .weight)
         self.baseExperience = try container.decode(Int.self, forKey: .baseExperience)
     }
