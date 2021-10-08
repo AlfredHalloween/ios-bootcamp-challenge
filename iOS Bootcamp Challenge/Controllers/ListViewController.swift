@@ -14,7 +14,6 @@ class ListViewController: UICollectionViewController {
     private var resultPokemons: [Pokemon] = []
 
     // TODO: Use UserDefaults to pre-load the latest search at start
-    // TODO: Use UserDefaults to pre-load the latest search at start
     let userSearchDefaults = UserDefaults.standard
     let searchKey: String = "search"
 
@@ -32,8 +31,11 @@ class ListViewController: UICollectionViewController {
     private var isFirstLauch: Bool = true
 
     // TODO: Add a loading indicator when the app first launches and has no pokemons
-
-    private var shouldShowLoader: Bool = true
+    private var shouldShowLoader: Bool = true {
+        didSet {
+            shouldShowLoader ? SVProgressHUD.show() : SVProgressHUD.dismiss()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
